@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Purchase Successful - caldump.com</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://js.stripe.com/v3/"></script>
+    <style>
+        :root {
+            --primary-color: #ff69b4;
+            --secondary-color: #ff9ed2;
+            --dark-color: #202124;
+            --light-color: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f5f5f5 0%, #ffffff 100%);
+            padding: 20px;
+        }
+
+        .success-container {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        h1 {
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        #status {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-top: 1rem;
+            min-height: 24px;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 105, 180, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .return-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            margin-top: 2rem;
+            display: inline-block;
+            transition: opacity 0.2s;
+        }
+
+        .return-link:hover {
+            opacity: 0.8;
+        }
+    </style>
+    <script>
+        const EXTENSION_ID = 'ociinpogekbfnofjgobkjcpbpldlfken';
+
+        function showLoading() {
+            const status = document.getElementById('status');
+            status.innerHTML = 'Activating your license... <div class="loading"></div>';
+        }
+
+        function showSuccess() {
+            const status = document.getElementById('status');
+            status.innerHTML = 'License activated successfully! <i class="fas fa-check"></i>';
+        }
+
+        function showError(message) {
+            const status = document.getElementById('status');
+            status.innerHTML = `Error: ${message} <i class="fas fa-exclamation-circle"></i>`;
+            status.style.color = '#dc3545';
+        }
+
+        async function activateLicense() {
+            showLoading();
+
+            // Get session ID from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const sessionId = urlParams.get('session_id');
+
+            if (!sessionId) {
+                showError('No session ID found');
+                return;
+            }
+
+            try {
+                // Send activation message to extension
+                chrome.runtime.sendMessage(EXTENSION_ID, {
+                    type: 'activate_license',
+                    sessionId: sessionId,
+                    timestamp: Date.now()
+                }, function(response) {
+                    if (response && response.status === 'success') {
+                        showSuccess();
+                        // After 2 seconds, redirect back to the extension
+                        setTimeout(() => {
+                            window.location.href = `chrome-extension://${EXTENSION_ID}/popup.html`;
+                        }, 2000);
+                    } else {
+                        showError('Failed to activate license. Please try reopening the extension.');
+                    }
+                });
+            } catch (error) {
+                console.error('Error:', error);
+                showError('Failed to communicate with extension. Please ensure the extension is installed.');
+            }
+        }
+
+        // Start activation when page loads
+        document.addEventListener('DOMContentLoaded', activateLicense);
+    </script>
+</head>
+
+<body>
+    <div class="success-container">
+        <i class="fas fa-calendar-check success-icon"></i>
+        <h1>Thank you for your purchase!</h1>
+        <p>You're now getting access to caldump.com's powerful calendar scheduling features.</p>
+        <p id="status"></p>
+    </div>
+</body>
+
+</html>
