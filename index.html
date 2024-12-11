@@ -188,16 +188,26 @@
         }
 
         .store-link {
-            color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 25px;
             text-decoration: none;
-            display: inline-block;
-            margin-top: 1rem;
-            font-size: 0.9rem;
-            transition: opacity 0.2s;
+            font-weight: 600;
+            transition: transform 0.2s;
+            font-size: 1.2rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .store-link:hover {
-            opacity: 0.8;
+            transform: translateY(-2px);
+            opacity: 1;
+        }
+
+        .store-link i {
+            font-size: 1.4rem;
         }
     </style>
 </head>
@@ -205,7 +215,6 @@
     <header>
         <nav class="container nav">
             <a href="#" class="logo">caldump.com</a>
-            <a href="https://chromewebstore.google.com/detail/caldumpcom/ociinpogekbfnofjgobkjcpbpldlfken?hl=en-US" target="_blank" class="cta-button">Get Extension</a>
         </nav>
     </header>
 
@@ -214,16 +223,9 @@
             <h1>Bulk Schedule Your Calendar Events in Seconds</h1>
             <p>Stop wasting time adding events one by one. With caldump.com, simply paste your tasks, set your preferences, and watch as they're automatically scheduled in your Google Calendar.</p>
             <div style="margin: 2rem 0;">
-                <stripe-buy-button
-                    buy-button-id="buy_btn_1QUgqHFL7C10dNyGlq3U4URR"
-                    publishable-key="pk_live_51J7Ti4FL7C10dNyGubXiYMWwF6jPahwvwDjXXooFE9VbI1Brh6igKsmNKAqmFoYflQveSCQ8WR1N47kowzJ1drrQ00ijl4Euus"
-                >
-                </stripe-buy-button>
-                <div>
-                    <a href="https://chromewebstore.google.com/detail/caldumpcom/ociinpogekbfnofjgobkjcpbpldlfken?hl=en-US" target="_blank" class="store-link">
-                        <i class="fab fa-chrome"></i> Available on Chrome Web Store
-                    </a>
-                </div>
+                <a href="https://chromewebstore.google.com/detail/caldumpcom/ociinpogekbfnofjgobkjcpbpldlfken?hl=en-US" target="_blank" class="store-link">
+                    <i class="fab fa-chrome"></i> Get it on Chrome Web Store
+                </a>
             </div>
         </div>
     </section>
